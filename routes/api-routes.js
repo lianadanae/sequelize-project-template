@@ -36,7 +36,7 @@ module.exports = function(app) {
         id: req.params.id,
       },
     });
-    res.status(200).send(result);
+    res.status(200).end();
   });
 
   // PUT route for updating todos.
