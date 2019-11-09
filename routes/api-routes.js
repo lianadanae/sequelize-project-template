@@ -19,12 +19,18 @@ module.exports = function(app) {
   // POST route for saving a new todo.
   // We can create a todo using the data on req.body
   app.post('/api/todos', async (req, res) => {
-    const {text} = req.body;
-    const result = await db.Todo.create({
-      text,
-      complete: false,
-    });
-    res.send(result);
+    try {
+      const result = await db.Todo.create({
+        text: req.body.text,
+      });
+      res.json(result);
+    } catch (error) {
+      res.json({
+        error: {
+          ...error,
+        },
+      });
+    }
   });
 
   // DELETE route for deleting todos.
@@ -42,12 +48,19 @@ module.exports = function(app) {
   // PUT route for updating todos.
   // We can access the updated todo in req.body
   app.put('/api/todos', async (req, res) => {
-    const {id, text, complete} = req.body;
-    const result = await db.Todo.update(
-        {text, complete},
-        {
-          where: {id},
-        });
+    const {
+      id,
+      text,
+      complete,
+    } = req.body;
+    const result = await db.Todo.update({
+      text,
+      complete,
+    }, {
+      where: {
+        id,
+      },
+    });
     res.send(result);
   });
 };
